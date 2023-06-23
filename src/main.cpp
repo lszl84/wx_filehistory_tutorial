@@ -2,6 +2,9 @@
 #include <wx/wrapsizer.h>
 #include <wx/splitter.h>
 
+#include <wx/config.h>
+#include <wx/filehistory.h>
+
 #include <string>
 #include <vector>
 #include <tuple>
@@ -66,6 +69,7 @@ bool MyApp::OnInit()
 {
     wxInitAllImageHandlers();
 
+    SetAppName("PaintAppWx");
     SetAppDisplayName("Paint App");
 
     docManager.reset(new wxDocManager);
@@ -79,6 +83,12 @@ bool MyApp::OnInit()
     frame = new MyFrame(docManager.get(), nullptr, wxID_ANY, wxGetApp().GetAppDisplayName());
     frame->Show(true);
     return true;
+}
+
+int MyApp::OnExit()
+{
+    docManager->FileHistorySave(*wxConfig::Get());
+    return wxApp::OnExit();
 }
 
 ToolSettings &MyApp::GetToolSettings()
@@ -260,17 +270,38 @@ void MyFrame::SelectToolPane(ToolSelectionPane *pane)
 
 void MyFrame::BuildMenuBar()
 {
+    constexpr int ClearHistoryMenuId = 10001;
+
     auto menuBar = new wxMenuBar;
 
     auto fileMenu = new wxMenu;
     fileMenu->Append(wxID_NEW);
     fileMenu->Append(wxID_OPEN);
+
+    auto recentFilesMenu = new wxMenu;
+    recentFilesMenu->Append(ClearHistoryMenuId, "&Clear");
+
+    fileMenu->AppendSubMenu(recentFilesMenu, "Open Recent");
+    fileMenu->AppendSeparator();
+
     fileMenu->Append(wxID_SAVE);
     fileMenu->Append(wxID_SAVEAS);
     fileMenu->Append(wxID_CLOSE);
     fileMenu->Append(wxID_EXIT);
 
     menuBar->Append(fileMenu, "&File");
+
+    GetDocumentManager()->FileHistoryUseMenu(recentFilesMenu);
+    GetDocumentManager()->FileHistoryLoad(*wxConfig::Get());
+
+    this->Bind(
+        wxEVT_MENU, [this](wxCommandEvent &event)
+        {
+            while (GetDocumentManager()->GetFileHistory()->GetCount() > 0)
+            {
+                GetDocumentManager()->GetFileHistory()->RemoveFileFromHistory(0);
+            } },
+        ClearHistoryMenuId);
 
     auto editMenu = new wxMenu;
     editMenu->Append(wxID_UNDO);

@@ -11,6 +11,7 @@ class MyApp : public wxApp
 {
 public:
     virtual bool OnInit();
+    virtual int OnExit();
 
     static void SetupCanvasForView(DrawingView *view);
     static ToolSettings &GetToolSettings();
