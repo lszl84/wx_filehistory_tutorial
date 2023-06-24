@@ -4,6 +4,8 @@ Using `wxFileHistory` to build a list of recently opened files for C++ Desktop A
 
 The code in this repository shows how to integrate `wxFileHistory` with `wxWidgets`' Document-View Framework. If you want an example on how to use `wxFileHistory` manually, then scroll to the bottom of this page.
 
+VIDEO HERE: https://youtu.be/u3Y5qkJob04
+
 This tutorial is a part of the series about building a multiplatform Paint App in C++ with wxWidgets: https://www.youtube.com/watch?v=Spt5VF1aSps&list=PL0qQTroQZs5sxKZDdJrn8fEjNXCPT7f5T
 
 ## Requirements
