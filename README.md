@@ -146,6 +146,6 @@ void MyFrame::SetupMenuBar()
 ```
 
 ---
-Check out the blog for more! [www.lukesdevtutorials.com](https://www.lukesdevtutorials.com)
+Check out the blog for more! [www.onlyfastcode.com](https://www.onlyfastcode.com)
 ---
 
